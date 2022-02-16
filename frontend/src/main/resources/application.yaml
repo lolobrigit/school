@@ -1,0 +1,17 @@
+spring:
+  profiles.active: REST #REST STUB
+  thymeleaf:
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    content-type: text/html
+    cache: true
+
+apiService:
+  baseUrl: "http://localhost:8081"
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    org.thymeleaf: DEBUG

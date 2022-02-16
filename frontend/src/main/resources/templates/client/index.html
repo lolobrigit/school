@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Открытые заявки</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+<h1>Мои заявки</h1>
+<div>
+    <a href="/client/create"><button>Создать заявку</button></a>
+</div>
+<div th:if="${requests.size() > 0}">
+    <div class="request" th:each="record : ${requests}">
+        <h2 th:text="${'№'+record.getId() +'-'+#dates.format(record.getCreatedAt(), 'dd-MM-yyyy')}"></h2>
+        <div>
+            <span th:text="${record.getStatus().getMessage()}"/>
+        </div>
+        <a th:href="@{/client/view/{id}(id=${record.getId()})}">Просмотр</a>
+    </div>
+</div>
+<div th:unless="${requests.size() > 0}">
+    Открытых заявок нет
+</div>
+</body>
+</html>

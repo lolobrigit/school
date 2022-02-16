@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro https://www.liquibase.org/xml/ns/pro/liquibase-pro-4.3.xsd">
+
+    <!-- Версионирование базы данных для JobsService -->
+
+    <changeSet id="jobsService_001_create_type_table" author="sharypov">
+        <createTable tableName="job_type">
+            <column name="id" type="number" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(128)"/>
+            <column name="desc"  type="VARCHAR(256)"/>
+            <column name="enabled" type="BOOLEAN"/>
+        </createTable>
+
+        <insert tableName="job_type">
+            <column name="title">Ремонт ПК</column>
+            <column name="desc">Описание ремонта ПК</column>
+            <column name="enabled">1</column>
+        </insert>
+        <insert tableName="job_type">
+            <column name="title">Ремонт мелкой бытовой техники</column>
+            <column name="desc">Описание ремонта мелкой бытовой техники</column>
+            <column name="enabled">1</column>
+        </insert>
+        <insert tableName="job_type">
+            <column name="title">Ремонт крупной бытовой техники</column>
+            <column name="desc">Описание ремонта крупной бытовой техники</column>
+            <column name="enabled">1</column>
+        </insert>
+        <insert tableName="job_type">
+            <column name="title">Замена экранов</column>
+            <column name="desc">Описание замены экранов</column>
+            <column name="enabled">0</column>
+        </insert>
+
+        <rollback>
+            <dropTable tableName="job_type"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

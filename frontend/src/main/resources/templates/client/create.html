@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Создание заявки</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+<h1>Создание заявки</h1>
+<div>
+    <a href="/client/"><button>К списку заявок</button></a>
+</div>
+<form method="post">
+    <p th:if="${errorsList!= null}">
+        <p class="errorMessage" th:each="error: ${errorsList}" th:text="${error.getField()+' '+error.getDefaultMessage()}"></p>
+    </p>
+    <p>
+        <label>Выберите услуги</label>
+        <br/>
+        <select name="jobs" multiple>
+            <option th:each="job : ${jobs}" th:value="${job.id}" th:text="${job.title}"></option>
+        </select>
+    </p>
+    <p>
+        <label>Выберите желаемое время для посещения</label>
+        <br/>
+        <input name="visitTime" type="datetime-local"/>
+    </p>
+    <label>Описание проблемы</label>
+    <br>
+    <textarea name="comment"></textarea>
+    <p>
+        <button>Создать заявку</button>
+    </p>
+</form>
+
+<style>
+.errorMessage {
+    color: red;
+}
+</style>
+</body>
+</html>

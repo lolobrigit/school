@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro https://www.liquibase.org/xml/ns/pro/liquibase-pro-4.3.xsd">
+
+    <!-- Версионирование базы данных для RequestService -->
+
+    <changeSet id="jobsService_001_create_table" author="sharypov">
+        <createTable tableName="request">
+            <column name="id" type="number" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="client_id" type="number">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="number"/>
+            <column name="created_time" type="datetime"/>
+            <column name="planned_visit_time" type="datetime"/>
+            <column name="last_action_time" type="datetime"/>
+            <column name="closed_time" type="datetime"/>
+            <column name="price" type="DECIMAL"/>
+            <column name="comment" type="LONGVARCHAR"/>
+        </createTable>
+        
+        <createIndex tableName="request" indexName="id_clientId">
+            <column name="id"/>
+            <column name="client_id"/>
+            
+        </createIndex>
+        
+        <rollback>
+            <dropTable tableName="request"/>
+        </rollback>
+    </changeSet>
+    
+    
+    <changeSet id="requestService_002_create_jobs_link" author="sharypov">
+        <createTable tableName="jobs_link">
+            <column name="request_id" type="number"/>
+            <column name="job_id" type="number"/>
+        </createTable>
+
+        <createIndex tableName="jobs_link" indexName="pk" unique="true">
+            <column name="request_id"/>
+            <column name="job_id"/>
+        </createIndex>
+    </changeSet>
+
+
+
+</databaseChangeLog>

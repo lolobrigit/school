@@ -23,8 +23,14 @@ dist/
 target/
 dist/
 
+!**/src/main/**/target/
+!**/src/test/**/target/
+
 # JetBrains IDE
 .idea/
+*.iws
+*.iml
+*.ipr
 
 # Unit test reports
 TEST*.xml

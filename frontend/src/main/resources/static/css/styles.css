@@ -1,0 +1,14 @@
+body {
+  text-align: center;
+}
+
+
+.actionHistory {
+  border: 1px solid black;
+
+  margin: 5px;
+}
+
+.selectedService {
+  margin: 0 1em 0 0;
+}
