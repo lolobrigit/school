@@ -38,17 +38,7 @@
     </changeSet>
     
     
-    <changeSet id="requestService_002_create_jobs_link" author="sharypov">
-        <createTable tableName="jobs_link">
-            <column name="request_id" type="number"/>
-            <column name="job_id" type="number"/>
-        </createTable>
 
-        <createIndex tableName="jobs_link" indexName="pk" unique="true">
-            <column name="request_id"/>
-            <column name="job_id"/>
-        </createIndex>
-    </changeSet>
 
 
 
