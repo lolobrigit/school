@@ -54,3 +54,5 @@ Thumbs.db
 *.mov
 *.wmv
 
+*.mv.db
+*.trace.db

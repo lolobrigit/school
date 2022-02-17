@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<context>
+    <ResourceLink auth="Container" name="jdbc/backendDbLink" global="jdbc/backendDbLink" type="javax.sql.DataSource" />
+</context>
