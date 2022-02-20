@@ -7,7 +7,7 @@ import lombok.extern.jackson.Jacksonized;
 @Getter
 @Builder
 @Jacksonized
-public class Job {
+public class Job implements JobAbstract {
 
     /**
      * Код услуги.

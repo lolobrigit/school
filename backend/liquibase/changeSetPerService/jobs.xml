@@ -57,4 +57,10 @@
         </createIndex>
     </changeSet>
 
+    <changeSet id="jobsService_003_create_jobs_sequence" author="sharypov">
+        <createSequence sequenceName="jobs_id_sequence"
+            startValue="5"
+        />
+    </changeSet>
+
 </databaseChangeLog>

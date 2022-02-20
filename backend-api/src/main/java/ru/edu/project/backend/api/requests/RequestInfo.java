@@ -17,7 +17,7 @@ import java.util.List;
 @Setter
 @Builder
 @Jacksonized
-public class RequestInfo {
+public class RequestInfo implements RequestInfoAbstract {
 
     /**
      * id заявки.
