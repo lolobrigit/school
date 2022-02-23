@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Просмотр заявки</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+<h1 th:text="${'Заявка №'+record.getId() +'-'+#dates.format(record.getCreatedAt(), 'dd-MM-yyyy')}"></h1>
+<div class="requestView">
+    <div>
+       Статус: <span th:text="${record.getStatus().getMessage()}"/>
+    </div>
+    <div>
+        Запланированное время визита: <span th:text="${#dates.format(record.getPlannedVisitAt(), 'dd-MM-yyyy HH:mm')}"/>
+    </div>
+    <div>
+        Услуги: <span class="selectedService" th:each="service: ${record.getServices()}" th:text="${service.getTitle()}"/>
+    </div>
+    <div>
+        Текст обращения: <p th:text="${record.getComment()}"/>
+    </div>
+    <div>
+        Последнее обновление: <p th:text="${#dates.format(record.getLastActionAt(), 'dd-MM-yyyy HH:mm')}"/>
+    </div>
+
+    <div class="actions">
+        <div class="status">
+            <form method="get" th:action="@{/manager/view/{id}/setStatus(id=${record.getId()})}">
+                <select name="status">
+                    <option th:each="status: ${statuses}" th:disabled="${status.getCode() == record.getStatus().getCode()}" th:value="${status.getCode()}" th:text="${status.getMessage()}"/>
+                </select>
+                <button>Сменить</button>
+            </form>
+        </div>
+
+
+
+    </div>
+
+
+    <div class="inventory" th:if="${record.getInventoryList() != null && !record.getInventoryList().isEmpty()}">
+        TODO Перечисление оборудования
+    </div>
+
+    <div class="actionHistory" th:if="${record.getActionHistory() != null}">
+        <div>История операций по заявке:</div>
+        <div class="history-record" th:each="history: ${record.getActionHistory()}">
+            <div class="record-time">
+                Время: <span th:text="${#dates.format(history.getTime(), 'dd-MM-yyyy HH:mm:ss')}"/>
+            </div>
+            <div class="record-type">
+                Тип: <span th:text="${history.getTypeMessage()}"/>
+            </div>
+            <div class="record-message" th:if="${history.getMessage()!= null && !history.getMessage().isEmpty()}">
+                Сообщение: <span th:text="${history.getMessage()}"/>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

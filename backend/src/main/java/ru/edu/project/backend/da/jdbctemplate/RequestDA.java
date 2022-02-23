@@ -7,6 +7,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Service;
+import ru.edu.project.backend.api.common.PagedView;
+import ru.edu.project.backend.api.common.RecordSearch;
 import ru.edu.project.backend.api.requests.RequestInfo;
 import ru.edu.project.backend.model.RequestStatus;
 
@@ -104,6 +106,18 @@ public class RequestDA implements ru.edu.project.backend.da.RequestDALayer {
             return insert(draft);
         }
         return update(draft);
+    }
+
+    /**
+     * Поиск заявок.
+     *
+     * @param recordSearch
+     * @return list
+     */
+    @Override
+    public PagedView<RequestInfo> search(final RecordSearch recordSearch) {
+        //пока не реализуем этот метод, так как целевая реализация - Spring Data
+        throw new RuntimeException("Need to implement ru.edu.project.backend.da.jdbctemplate.RequestDA.search");
     }
 
     private RequestInfo update(final RequestInfo draft) {

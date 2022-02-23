@@ -7,9 +7,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.edu.project.backend.api.common.PagedView;
+import ru.edu.project.backend.api.common.RecordSearch;
 import ru.edu.project.backend.api.requests.RequestForm;
 import ru.edu.project.backend.api.requests.RequestInfo;
 import ru.edu.project.backend.api.requests.RequestService;
+import ru.edu.project.backend.api.requests.UpdateStatusRequest;
 
 import java.util.List;
 
@@ -52,6 +55,20 @@ public class RequestController implements RequestService {
     }
 
     /**
+     * Получение детальной информации по заявке.
+     *
+     * @param requestId
+     * @return запись
+     */
+    @Override
+    @GetMapping("/getDetailedInfo/{requestId}")
+    public RequestInfo getDetailedInfo(
+            @PathVariable("requestId") final long requestId
+    ) {
+        return delegate.getDetailedInfo(requestId);
+    }
+
+    /**
      * Регистрация новой заявки.
      *
      * @param requestForm
@@ -61,5 +78,29 @@ public class RequestController implements RequestService {
     @PostMapping("/createRequest")
     public RequestInfo createRequest(@RequestBody final RequestForm requestForm) {
         return delegate.createRequest(requestForm);
+    }
+
+    /**
+     * Метод для поиска заявок.
+     *
+     * @param recordSearch
+     * @return list
+     */
+    @Override
+    @PostMapping("/searchRequests")
+    public PagedView<RequestInfo> searchRequests(@RequestBody final RecordSearch recordSearch) {
+        return delegate.searchRequests(recordSearch);
+    }
+
+    /**
+     * Изменение статуса заявки.
+     *
+     * @param updateStatusRequest
+     * @return boolean
+     */
+    @Override
+    @PostMapping("/updateStatus")
+    public boolean updateStatus(@RequestBody final UpdateStatusRequest updateStatusRequest) {
+        return delegate.updateStatus(updateStatusRequest);
     }
 }

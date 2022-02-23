@@ -4,9 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import ru.edu.project.backend.api.common.PagedView;
+import ru.edu.project.backend.api.common.RecordSearch;
+import ru.edu.project.backend.api.common.Status;
 import ru.edu.project.backend.api.requests.RequestForm;
 import ru.edu.project.backend.api.requests.RequestInfo;
 import ru.edu.project.backend.api.requests.RequestService;
+import ru.edu.project.backend.api.requests.UpdateStatusRequest;
 import ru.edu.project.backend.da.RequestDALayer;
 import ru.edu.project.backend.model.RequestStatus;
 
@@ -51,16 +55,29 @@ public class RequestServiceLayer implements RequestService {
      */
     @Override
     public RequestInfo getDetailedInfo(final long clientId, final long requestId) {
-        RequestInfo requestInfo = daLayer.getById(requestId);
-
-        if (requestInfo == null || requestInfo.getClientId() != clientId) {
+        RequestInfo requestInfo = getDetailedInfo(requestId);
+        if (requestInfo.getClientId() != clientId) {
             throw new IllegalArgumentException("request for client not found");
         }
 
+        return requestInfo;
+    }
+
+    /**
+     * Получение детальной информации по заявке.
+     *
+     * @param requestId
+     * @return запись
+     */
+    @Override
+    public RequestInfo getDetailedInfo(final long requestId) {
+        RequestInfo requestInfo = daLayer.getById(requestId);
+        if (requestInfo == null) {
+            throw new IllegalArgumentException("request for client not found");
+        }
         requestInfo.setServices(jobService.getByLink(requestId));
 
         //подгрузка истории
-
         return requestInfo;
     }
 
@@ -73,11 +90,13 @@ public class RequestServiceLayer implements RequestService {
     @Override
     public RequestInfo createRequest(final RequestForm requestForm) {
 
+        Timestamp createdAt = new Timestamp(new Date().getTime());
         RequestInfo draft = RequestInfo.builder()
                 .clientId(requestForm.getClientId())
-                .createdAt(new Timestamp(new Date().getTime()))
+                .createdAt(createdAt)
                 .plannedVisitAt(requestForm.getDesiredTimeToVisit())
                 .comment(requestForm.getComment())
+                .lastActionAt(createdAt)
                 .status(RequestStatus.CREATED)
                 .build();
 
@@ -90,5 +109,46 @@ public class RequestServiceLayer implements RequestService {
         //создать действие "Создана заявка"
 
         return draft;
+    }
+
+
+    /**
+     * Метод для поиска заявок.
+     *
+     * @param recordSearch
+     * @return list
+     */
+    @Override
+    public PagedView<RequestInfo> searchRequests(final RecordSearch recordSearch) {
+
+        return daLayer.search(recordSearch);
+    }
+
+    /**
+     * Изменение статуса заявки.
+     *
+     * @param updateStatusRequest
+     * @return boolean
+     */
+    @Override
+    public boolean updateStatus(final UpdateStatusRequest updateStatusRequest) {
+        RequestInfo req = daLayer.getById(updateStatusRequest.getRequestId());
+
+        //Синхронизируем статусы
+        Status status = RequestStatus.byCode(updateStatusRequest.getStatus().getCode());
+
+        if (req == null || status == null) {
+            return false;
+        }
+
+        /*
+         * проверяем условия перехода при необходимости
+         */
+
+        req.setStatus(status);
+        req.setLastActionAt(new Timestamp(new Date().getTime()));
+        daLayer.save(req);
+
+        return true;
     }
 }

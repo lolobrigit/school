@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Работа с заявками</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+    <link th:href="@{/css/stylesAdmin.css}" rel="stylesheet">
+</head>
+<body>
+<h1>Работа с заявками</h1>
+
+<div th:if="${requestsPage.getTotal() > 0}">
+    <div>
+        <form>
+            <p>Заявок всего <span th:text="${requestsPage.getTotal()}"/></p>
+            <p>Страница <span th:text="${requestsPage.getPage()+1}"/> из <span
+                    th:text="${requestsPage.getTotalPages()}"/>
+            </p>
+            <p>
+                Страница: <input name="page" type="number" th:value="${requestsPage.getPage()+1}" min="1"
+                                 th:attr="max=${requestsPage.getTotalPages()}"/>
+            </p>
+            <p>
+                <a th:if="${requestsPage.getPage() > 0}"
+                   th:href="@{/manager/(page=${requestsPage.getPage()}, perPage=${requestsPage.getPerPage()}, searchBy=${orderByField.getField()}, direct=${isAsc})}">&larr;
+                    Предыдущая страница</a>
+                <a th:if="${requestsPage.getPage()+1 < requestsPage.getTotalPages()}"
+                   th:href="@{/manager/(page=${requestsPage.getPage()+2}, perPage=${requestsPage.getPerPage()}, searchBy=${orderByField.name()}, direct=${isAsc})}">Следующая
+                    страница &rarr;</a>
+
+            </p>
+
+            <p>
+                Сортировка по:
+                <select name="searchBy">
+                    <option th:each="field : ${orderFields}" th:value="${field.name()}" th:text="${field.getMsg()}"
+                            th:selected="${field == orderByField}"></option>
+                </select>
+            </p>
+
+            <p>
+                Сортировка по:
+                <select name="direct">
+                    <option th:selected="${isAsc}" value="1">возрастанию</option>
+                    <option th:selected="${!isAsc}" value="0">убыванию</option>
+                </select>
+            </p>
+
+            <p>
+                Записей на страницу:
+                <select name="perPage">
+                    <option th:selected="${5 == requestsPage.getPerPage()}">5</option>
+                    <option th:selected="${10 == requestsPage.getPerPage()}">10</option>
+                    <option th:selected="${50 == requestsPage.getPerPage()}">50</option>
+                </select>
+            </p>
+            <button>Перейти</button>
+        </form>
+    </div>
+    <div>
+        <form method="get">
+            Поиск заявки:
+            <input name="id" type="number" />
+            <button>Найти</button>
+        </form>
+    </div>
+    <table class="requestTable">
+        <thead>
+        <th>id</th>
+        <th>Дата создания</th>
+        <th>Статус</th>
+        <th>Клиент</th>
+        <th>Последнее обновление</th>
+        <th>Действия</th>
+        </thead>
+        <tr class="request" th:each="record : ${requestsPage.getElements()}">
+            <td th:text="${record.getId()}"/>
+            <td th:text="${#dates.format(record.getCreatedAt(), 'dd-MM-yyyy HH:mm:ss')}"/>
+            <td th:text="${record.getStatus().getMessage()}"/>
+            <td th:text="${record.getClientId()}"/>
+            <td th:text="${#dates.format(record.getLastActionAt(), 'dd-MM-yyyy HH:mm:ss')}"/>
+            <td>
+                <a target="_blank" th:href="@{/manager/view/{id}(id=${record.getId()})}">Просмотр</a>
+            </td>
+        </tr>
+    </table>
+
+</div>
+<div th:unless="${requestsPage.getTotal() > 0}">
+    Заявки не поступили
+</div>
+</body>
+</html>

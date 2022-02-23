@@ -30,12 +30,12 @@ public enum RequestStatus implements Status {
     /**
      * Заявка готова к выдаче.
      */
-    READY(3L, "Готов к выдаче"),
+    READY(4L, "Готов к выдаче"),
 
     /**
      * Заявка закрыта.
      */
-    COMPLETED(4L, "Завершен");
+    COMPLETED(5L, "Завершен");
 
     /**
      * Код.

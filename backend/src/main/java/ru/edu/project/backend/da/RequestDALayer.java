@@ -1,5 +1,7 @@
 package ru.edu.project.backend.da;
 
+import ru.edu.project.backend.api.common.PagedView;
+import ru.edu.project.backend.api.common.RecordSearch;
 import ru.edu.project.backend.api.requests.RequestInfo;
 
 import java.util.List;
@@ -29,4 +31,12 @@ public interface RequestDALayer {
      * @return request
      */
     RequestInfo save(RequestInfo draft);
+
+    /**
+     * Поиск заявок.
+     *
+     * @param recordSearch
+     * @return list
+     */
+    PagedView<RequestInfo> search(RecordSearch recordSearch);
 }

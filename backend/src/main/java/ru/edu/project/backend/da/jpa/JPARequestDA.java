@@ -2,7 +2,12 @@ package ru.edu.project.backend.da.jpa;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ru.edu.project.backend.api.common.PagedView;
+import ru.edu.project.backend.api.common.RecordSearch;
 import ru.edu.project.backend.api.requests.RequestInfo;
 import ru.edu.project.backend.da.RequestDALayer;
 import ru.edu.project.backend.da.jpa.converter.RequestInfoMapper;
@@ -11,6 +16,7 @@ import ru.edu.project.backend.da.jpa.repository.RequestEntityRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Profile("SPRING_DATA")
@@ -65,5 +71,29 @@ public class JPARequestDA implements RequestDALayer {
         RequestEntity saved = repo.save(entity);
         draft.setId(saved.getId());
         return mapper.map(saved);
+    }
+
+
+    /**
+     * Поиск заявок.
+     *
+     * @param recordSearch
+     * @return list
+     */
+    @Override
+    public PagedView<RequestInfo> search(final RecordSearch recordSearch) {
+        Sort.Direction direction = recordSearch.isAsc() ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        PageRequest pageRequest = PageRequest.of(recordSearch.getPage(), recordSearch.getPerPage(), Sort.by(direction, recordSearch.getOrderBy()));
+
+        Page<RequestEntity> page = repo.findAll(pageRequest);
+
+        return PagedView.<RequestInfo>builder()
+                .elements(mapper.mapList(page.get().collect(Collectors.toList())))
+                .page(recordSearch.getPage())
+                .perPage(recordSearch.getPerPage())
+                .total(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .build();
     }
 }
