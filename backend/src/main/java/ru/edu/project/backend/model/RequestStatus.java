@@ -1,5 +1,6 @@
 package ru.edu.project.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import ru.edu.project.backend.api.common.Status;
@@ -8,6 +9,7 @@ import java.util.Arrays;
 
 @Getter
 @AllArgsConstructor
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum RequestStatus implements Status {
 
     /**
