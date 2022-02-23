@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro https://www.liquibase.org/xml/ns/pro/liquibase-pro-4.3.xsd">
+
+    <!-- Версионирование базы данных для ActionService -->
+
+    <changeSet id="actionsService_001_create_link_table" author="sharypov">
+        <createTable tableName="request_action">
+            <column name="request_id" type="number"/>
+            <column name="action_id" type="number"/>
+            <column name="time" type="datetime"/>
+            <column name="message" type="longtext"/>
+        </createTable>
+
+        <createIndex tableName="request_action" indexName="request_action_pk" unique="true">
+            <column name="request_id"/>
+            <column name="action_id"/>
+            <column name="time"/>
+        </createIndex>
+
+        <rollback>
+            <dropTable tableName="request_action"/>
+        </rollback>
+    </changeSet>
+
+
+
+</databaseChangeLog>

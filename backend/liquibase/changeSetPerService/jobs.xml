@@ -51,7 +51,7 @@
             <column name="job_id" type="number"/>
         </createTable>
 
-        <createIndex tableName="jobs_link" indexName="pk" unique="true">
+        <createIndex tableName="jobs_link" indexName="jobs_link_pk" unique="true">
             <column name="request_id"/>
             <column name="job_id"/>
         </createIndex>

@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import ru.edu.project.backend.api.action.CreateActionRequest;
+import ru.edu.project.backend.api.action.SimpleAction;
 import ru.edu.project.backend.api.common.PagedView;
 import ru.edu.project.backend.api.common.RecordSearch;
 import ru.edu.project.backend.api.common.Status;
@@ -12,6 +14,7 @@ import ru.edu.project.backend.api.requests.RequestInfo;
 import ru.edu.project.backend.api.requests.RequestService;
 import ru.edu.project.backend.api.requests.UpdateStatusRequest;
 import ru.edu.project.backend.da.RequestDALayer;
+import ru.edu.project.backend.model.ActionType;
 import ru.edu.project.backend.model.RequestStatus;
 
 import java.sql.Timestamp;
@@ -34,6 +37,12 @@ public class RequestServiceLayer implements RequestService {
      */
     @Autowired
     private JobServiceLayer jobService;
+
+    /**
+     * Зависимость для сервиса действий.
+     */
+    @Autowired
+    private ActionServiceLayer actionServiceLayer;
 
     /**
      * Получение заказов клиента.
@@ -76,8 +85,8 @@ public class RequestServiceLayer implements RequestService {
             throw new IllegalArgumentException("request for client not found");
         }
         requestInfo.setServices(jobService.getByLink(requestId));
+        requestInfo.setActionHistory(actionServiceLayer.searchByRequest(requestId));
 
-        //подгрузка истории
         return requestInfo;
     }
 
@@ -106,7 +115,14 @@ public class RequestServiceLayer implements RequestService {
 
         draft.setServices(jobService.getByIds(requestForm.getSelectedJobs()));
 
-        //создать действие "Создана заявка"
+        actionServiceLayer.createAction(CreateActionRequest.builder()
+                .requestId(draft.getId())
+                .action(SimpleAction.builder()
+                        .typeCode(ActionType.CREATED.getTypeCode())
+                        .build())
+                .build());
+
+        draft.setActionHistory(actionServiceLayer.searchByRequest(draft.getId()));
 
         return draft;
     }
@@ -145,9 +161,21 @@ public class RequestServiceLayer implements RequestService {
          * проверяем условия перехода при необходимости
          */
 
+        Long oldCode = req.getStatus().getCode();
+
         req.setStatus(status);
-        req.setLastActionAt(new Timestamp(new Date().getTime()));
+        Timestamp timestamp = new Timestamp(new Date().getTime());
+        req.setLastActionAt(timestamp);
         daLayer.save(req);
+
+        actionServiceLayer.createAction(CreateActionRequest.builder()
+                .requestId(req.getId())
+                .action(SimpleAction.builder()
+                        .typeCode(ActionType.STATUS_CHANGED.getTypeCode())
+                        .time(timestamp)
+                        .message(oldCode + " > " + status.getCode())
+                        .build())
+                .build());
 
         return true;
     }

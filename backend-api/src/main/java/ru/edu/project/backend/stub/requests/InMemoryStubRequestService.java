@@ -1,6 +1,6 @@
 package ru.edu.project.backend.stub.requests;
 
-import ru.edu.project.backend.api.action.Action;
+import ru.edu.project.backend.api.action.SimpleAction;
 import ru.edu.project.backend.api.common.PagedView;
 import ru.edu.project.backend.api.common.RecordSearch;
 import ru.edu.project.backend.api.common.StatusImpl;
@@ -108,7 +108,7 @@ public class InMemoryStubRequestService implements RequestService {
                         .build())
                 .comment(requestForm.getComment())
                 .services(getJobsById(requestForm))
-                .actionHistory(asList(Action.builder()
+                .actionHistory(asList(SimpleAction.builder()
                         .time(new Timestamp(new Date().getTime()))
                         .typeCode(1L)
                         .typeMessage("Создание")

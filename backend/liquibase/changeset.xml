@@ -9,4 +9,5 @@
 
     <include file="./liquibase/changeSetPerService/jobs.xml"/>
     <include file="./liquibase/changeSetPerService/request.xml"/>
+    <include file="./liquibase/changeSetPerService/actions.xml"/>
 </databaseChangeLog>

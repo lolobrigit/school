@@ -1,35 +1,37 @@
 package ru.edu.project.backend.api.action;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.extern.jackson.Jacksonized;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.sql.Timestamp;
 
-@Getter
-@Builder
-@Jacksonized
-public class Action {
-
-    /**
-     * Время действия.
-     */
-    private Timestamp time;
+@JsonDeserialize(as = SimpleAction.class)
+public interface Action {
 
     /**
      * Код действия.
+     *
+     * @return long
      */
-    private Long typeCode;
+    Long getTypeCode();
 
     /**
-     * Название действия.
+     * Описание действия.
+     *
+     * @return string
      */
-    private String typeMessage;
-
+    String getTypeMessage();
 
     /**
-     * Сообщение.
+     * Время действия.
+     *
+     * @return timestamp
      */
-    private String message;
+    Timestamp getTime();
 
+    /**
+     * Сообщение действия.
+     *
+     * @return string
+     */
+    String getMessage();
 }
