@@ -40,4 +40,9 @@ public class JobEntity implements JobAbstract {
      * Признак активности.
      */
     private Boolean enabled;
+
+
+//    @OneToMany
+//    @JoinColumn(name = "job_id")
+//    private List<JobLinkEntity> links;
 }

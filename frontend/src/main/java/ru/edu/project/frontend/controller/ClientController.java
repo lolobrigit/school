@@ -8,10 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import ru.edu.project.backend.api.jobs.JobService;
@@ -57,6 +59,12 @@ public class ClientController {
     private RequestService requestService;
 
     /**
+     * Зависимость.
+     */
+    @Autowired
+    private DebugClientHolder clientHolder;
+
+    /**
      * Ссылка на сервис услуг.
      */
     @Autowired
@@ -70,7 +78,7 @@ public class ClientController {
      */
     @GetMapping("/")
     public String index(final Model model) {
-        long clientId = 1; //в дальнейшим заменим на id пользователя
+        long clientId = clientHolder.getStubClientId(); //в дальнейшим заменим на id пользователя
 
         model.addAttribute(
                 REQUESTS_ATTR,
@@ -88,7 +96,7 @@ public class ClientController {
      */
     @GetMapping("/view/{id}")
     public ModelAndView view(final @PathVariable("id") Long requestId) {
-        long clientId = 1; //в дальнейшим заменим на id пользователя
+        long clientId = clientHolder.getStubClientId(); //в дальнейшим заменим на id пользователя
 
         ModelAndView model = new ModelAndView("client/view");
 
@@ -148,7 +156,7 @@ public class ClientController {
             return createForm(model); //отображаем форму
         }
 
-        final long clientId = 1; //пока константой
+        final long clientId = clientHolder.getStubClientId(); //пока константой
 
         RequestInfo request = requestService.createRequest(RequestForm.builder()
                 .clientId(clientId)
@@ -158,6 +166,40 @@ public class ClientController {
                 .build());
 
         return "redirect:/client/?created=" + request.getId();
+    }
+
+    /**
+     * пример.
+     *
+     * @return str
+     */
+    @GetMapping("/method")
+    public String exampleForm() {
+        return "methodForm";
+    }
+
+    /**
+     * пример.
+     *
+     * @param model
+     * @return str
+     */
+    @PutMapping("/method")
+    public String examplePut(final Model model) {
+        model.addAttribute("method", "put");
+        return "method";
+    }
+
+    /**
+     * пример.
+     *
+     * @param model
+     * @return str
+     */
+    @DeleteMapping("/method")
+    public String exampleDelete(final Model model) {
+        model.addAttribute("method", "delete");
+        return "method";
     }
 
     @Getter

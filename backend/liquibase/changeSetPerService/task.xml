@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro https://www.liquibase.org/xml/ns/pro/liquibase-pro-4.3.xsd">
+
+    <!-- Версионирование базы данных для ActionService -->
+
+    <changeSet id="taskService_001_task_table" author="sharypov">
+        <createTable tableName="task">
+            <column name="id" type="varchar(64)"/>
+            <column name="client_id" type="number"/>
+            <column name="parent_id" type="varchar(64)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="some_text" type="longtext"/>
+        </createTable>
+
+        <createIndex tableName="task" indexName="task_pk" unique="true">
+            <column name="id"/>
+        </createIndex>
+
+        <createIndex tableName="task" indexName="client_id_parent_id" unique="false">
+            <column name="client_id"/>
+            <column name="parent_id"/>
+        </createIndex>
+
+        <rollback>
+            <dropTable tableName="task"/>
+        </rollback>
+    </changeSet>
+
+
+
+</databaseChangeLog>
