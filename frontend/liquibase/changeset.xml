@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro https://www.liquibase.org/xml/ns/pro/liquibase-pro-4.3.xsd">
+
+    <changeSet id="usertable_001_create_table" author="sharypov">
+        <createTable tableName="users">
+            <column name="id" type="number" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="username" type="varchar(128)">
+                <constraints unique="true"/>
+            </column>
+            <column name="password" type="varchar(128)"/>
+            <column name="roles" type="varchar(128)"/>
+            <column name="enabled" type="boolean"/>
+        </createTable>
+
+        <insert tableName="users">
+            <column name="username">client1</column>
+            <column name="password">{bcrypt}$2a$13$gtfyySJqdZpNapVdcQMJpuNZ1B2k.IDxFoWIg9R1Py5DB1LiATUcK</column>
+            <column name="roles">ROLE_CLIENT</column>
+            <column name="enabled">true</column>
+        </insert>
+        <insert tableName="users">
+            <column name="username">client2</column>
+            <column name="password">{bcrypt}$2a$13$gtfyySJqdZpNapVdcQMJpuNZ1B2k.IDxFoWIg9R1Py5DB1LiATUcK</column>
+            <column name="roles">ROLE_CLIENT</column>
+            <column name="enabled">true</column>
+        </insert>
+        <insert tableName="users">
+            <column name="username">manager</column>
+            <column name="password">{bcrypt}$2a$13$EB1zr.PSVJZdzoT/4WsvieHC10ZV8ut.zT7E5FtX/fhSO6PRX/3Wm</column>
+            <column name="roles">ROLE_MANAGER</column>
+            <column name="enabled">true</column>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

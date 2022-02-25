@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import ru.edu.project.authorization.UserDetailsId;
 import ru.edu.project.backend.api.jobs.JobService;
 import ru.edu.project.backend.api.requests.RequestForm;
 import ru.edu.project.backend.api.requests.RequestInfo;
@@ -73,12 +75,13 @@ public class ClientController {
     /**
      * Отображение заявок клиента.
      *
-     * @param model модель для представления
+     * @param model     модель для представления
+     * @param auth
      * @return view
      */
     @GetMapping("/")
-    public String index(final Model model) {
-        long clientId = clientHolder.getStubClientId(); //в дальнейшим заменим на id пользователя
+    public String index(final Model model, final Authentication auth) {
+        long clientId = getUserId(auth);
 
         model.addAttribute(
                 REQUESTS_ATTR,
@@ -89,14 +92,30 @@ public class ClientController {
     }
 
     /**
+     * Получаем clientId.
+     *
+     * @param auth
+     * @return clientId
+     */
+    private long getUserId(final Authentication auth) {
+        Object principal = auth.getPrincipal();
+
+        if (principal instanceof UserDetailsId) {
+            return ((UserDetailsId) principal).getUserId();
+        }
+        throw new IllegalStateException("invalid auth.getPrincipal() object type");
+    }
+
+    /**
      * Просмотр заявки по id.
      *
      * @param requestId
+     * @param auth
      * @return modelAndView
      */
     @GetMapping("/view/{id}")
-    public ModelAndView view(final @PathVariable("id") Long requestId) {
-        long clientId = clientHolder.getStubClientId(); //в дальнейшим заменим на id пользователя
+    public ModelAndView view(final @PathVariable("id") Long requestId, final Authentication auth) {
+        long clientId = getUserId(auth);
 
         ModelAndView model = new ModelAndView("client/view");
 
@@ -137,6 +156,7 @@ public class ClientController {
      * @param form
      * @param bindingResult результат валидации формы
      * @param model
+     * @param auth
      * @return redirect url
      */
     @PostMapping("/create")
@@ -144,7 +164,8 @@ public class ClientController {
             @Valid
             @ModelAttribute final CreateForm form,
             final BindingResult bindingResult,
-            final Model model
+            final Model model,
+            final Authentication auth
     ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute(
@@ -156,7 +177,7 @@ public class ClientController {
             return createForm(model); //отображаем форму
         }
 
-        final long clientId = clientHolder.getStubClientId(); //пока константой
+        final long clientId = getUserId(auth);
 
         RequestInfo request = requestService.createRequest(RequestForm.builder()
                 .clientId(clientId)

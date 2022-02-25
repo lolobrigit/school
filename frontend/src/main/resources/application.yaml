@@ -6,6 +6,8 @@ spring:
     encoding: UTF-8
     content-type: text/html
     cache: true
+  datasource:
+    jndi-url: jdbc/frontendDbLink
 
 apiService:
   baseUrl: "http://localhost:8081"
@@ -14,5 +16,6 @@ logging:
   level:
     root: INFO
     org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
     org.thymeleaf: DEBUG
     org.springframework.web.client: DEBUG
