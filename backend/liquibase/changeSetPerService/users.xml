@@ -9,7 +9,7 @@
 
     <changeSet id="usertable_001_create_table" author="sharypov">
         <createTable tableName="users">
-            <column name="id" type="number" autoIncrement="true">
+            <column name="id" type="number">
                 <constraints primaryKey="true"/>
             </column>
             <column name="username" type="varchar(128)">
@@ -20,19 +20,24 @@
             <column name="enabled" type="boolean"/>
         </createTable>
 
+        <createSequence sequenceName="user_id_sequence" startValue="100"/>
+
         <insert tableName="users">
+            <column name="id">1</column>
             <column name="username">client1</column>
             <column name="password">{bcrypt}$2a$13$gtfyySJqdZpNapVdcQMJpuNZ1B2k.IDxFoWIg9R1Py5DB1LiATUcK</column>
             <column name="roles">ROLE_CLIENT</column>
             <column name="enabled">true</column>
         </insert>
         <insert tableName="users">
+            <column name="id">2</column>
             <column name="username">client2</column>
             <column name="password">{bcrypt}$2a$13$gtfyySJqdZpNapVdcQMJpuNZ1B2k.IDxFoWIg9R1Py5DB1LiATUcK</column>
             <column name="roles">ROLE_CLIENT</column>
             <column name="enabled">true</column>
         </insert>
         <insert tableName="users">
+            <column name="id">3</column>
             <column name="username">manager</column>
             <column name="password">{bcrypt}$2a$13$EB1zr.PSVJZdzoT/4WsvieHC10ZV8ut.zT7E5FtX/fhSO6PRX/3Wm</column>
             <column name="roles">ROLE_MANAGER</column>

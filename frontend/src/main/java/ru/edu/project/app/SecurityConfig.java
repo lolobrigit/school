@@ -7,19 +7,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.edu.project.authorization.UserServiceDa;
-
-import javax.sql.DataSource;
+import ru.edu.project.authorization.FrontendUserService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    /**
-     * Зависимость.
-     */
-    @Autowired
-    private DataSource dataSource;
 
     /**
      * Общий passwordEncoder.
@@ -31,7 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * Зависимость на реализацию UserDetailService.
      */
     @Autowired
-    private UserServiceDa userServiceDa;
+    private FrontendUserService frontendUserService;
 
     /**
      * Настраиваем параметры доступов к URL.
@@ -46,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorities("ROLE_ANON")
                 .and()
                 .authorizeHttpRequests()
+                .antMatchers("/").permitAll()
                 .antMatchers("/*").hasAuthority("ROLE_ANON")
                 .antMatchers("/client/**").hasAuthority("ROLE_CLIENT")
                 .antMatchers("/manager/**").hasAuthority("ROLE_MANAGER")
@@ -97,7 +90,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         */
 
-        auth.userDetailsService(userServiceDa);
+        auth.userDetailsService(frontendUserService);
 
     }
 
