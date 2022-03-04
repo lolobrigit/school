@@ -36,7 +36,7 @@ public class FrontendUserService implements UserDetailsService {
     public Long insertRow(final String username, final String password, final String role) {
         return userService.register(UserInfo.builder()
                 .username(username)
-                .password("{bcrypt}" + passwordEncoder.encode(password))
+                .password(passwordEncoder.encode(password))
                 .roles(role)
                 .enabled(true)
                 .build());

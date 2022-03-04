@@ -104,7 +104,7 @@ public class IndexController {
         }
 
         if (!password.equals(password2) || password.length() < MIN_PASS_LENGTH) {
-            return "redirect:/login?bad_password";
+            return "redirect:/register?bad_password";
         }
 
         try {

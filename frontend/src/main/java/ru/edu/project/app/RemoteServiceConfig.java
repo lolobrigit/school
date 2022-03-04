@@ -1,8 +1,11 @@
 package ru.edu.project.app;
 
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.Scope;
+import org.springframework.web.client.RestTemplate;
 import ru.edu.project.backend.RestServiceInvocationHandler;
 import ru.edu.project.backend.api.jobs.JobService;
 import ru.edu.project.backend.api.requests.RequestService;
@@ -49,6 +52,12 @@ public class RemoteServiceConfig {
     public UserService userService(final RestServiceInvocationHandler handler) {
         handler.setServiceUrl("/user");
         return getProxy(handler, UserService.class);
+    }
+
+    @Bean
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public RestTemplate restTemplateBean(){
+        return new RestTemplate();
     }
 
 

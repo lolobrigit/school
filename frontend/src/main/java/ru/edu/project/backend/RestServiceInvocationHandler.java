@@ -2,11 +2,13 @@ package ru.edu.project.backend;
 
 import lombok.Setter;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import ru.edu.project.backend.api.common.AcceptorArgument;
@@ -37,7 +39,8 @@ public class RestServiceInvocationHandler implements InvocationHandler {
     /**
      * Шаблон restTemplate.
      */
-    private RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    private RestTemplate restTemplate;
 
     /**
      * Вызов проксируемого метода.
